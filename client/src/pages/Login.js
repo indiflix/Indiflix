@@ -8,7 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // ✅ Redirect function
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  const API_URL = process.env.REACT_APP_API_URL || "https://indiflix.onrender.com/api";
 
   useEffect(() => {
     // ✅ Redirect to home if user is already logged in
