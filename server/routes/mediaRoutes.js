@@ -68,5 +68,15 @@ router.post('/upload', authenticateUser, checkAdmin, upload.single('file'), asyn
     res.status(500).json({ error: 'Upload failed' });
   }
 });
+router.get('/', (req, res) => {
+    const sql = 'SELECT * FROM media ORDER BY created_at DESC';
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error('❌ Error fetching media:', err);
+        return res.status(500).json({ error: 'Failed to fetch media' });
+      }
+      res.status(200).json(results);
+    });
+  });
 
 module.exports = router;
