@@ -77,6 +77,6 @@ router.get('/', (req, res) => {
       }
       res.status(200).json(results);
     });
-  });cc
+  });
 
 module.exports = router;
