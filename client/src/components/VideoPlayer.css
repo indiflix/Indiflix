@@ -1,0 +1,53 @@
+.video-player {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 2000px;
+    background: black;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .controls.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .controls button, .controls select {
+    background: #ff4d4d;
+    border: none;
+    padding: 8px 12px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .controls button:hover, .controls select:hover {
+    background: #cc0000;
+  }
+  
+  .controls select {
+    color: black;
+  }
+  
+  /* ✅ Fullscreen Mode */
+  .fullscreen .video-player {
+    width: 100vw;
+    height: 100vh;
+  }
+  

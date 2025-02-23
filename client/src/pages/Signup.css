@@ -1,0 +1,87 @@
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+  }
+  
+  .signup-box {
+    width: 400px;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .signup-box h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+  
+  .signup-box input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .signup-box button {
+    width: 100%;
+    padding: 12px;
+    margin: 20px 0;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .signup-box button:hover {
+    background-color: #0056b3;
+  }
+  
+  .signup-box p {
+    color: #666;
+  }
+  
+  .signup-box a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .signup-box a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Dark mode styles */
+  body.dark-mode .signup-container {
+    background-color: #121212;
+  }
+  
+  body.dark-mode .signup-box {
+    background-color: #1e1e1e;
+    color: #fff;
+  }
+  
+  body.dark-mode .signup-box h1 {
+    color: #fff;
+  }
+  
+  body.dark-mode .signup-box input {
+    background-color: #333;
+    color: #fff;
+    border-color: #444;
+  }
+  
+  body.dark-mode .signup-box p {
+    color: #ccc;
+  }

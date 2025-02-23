@@ -1,0 +1,11 @@
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-mode .login-box,
+body.dark-mode .signup-box,
+body.dark-mode .contact-box {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
