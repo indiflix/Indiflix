@@ -8,7 +8,6 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // ✅ Redirect function
-  const API_URL = process.env.REACT_APP_API_URL || "https://indiflix.onrender.com/api";
 
   useEffect(() => {
     // ✅ Redirect to home if user is already logged in
@@ -21,7 +20,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/users/login`, { email, password });
+      const response = await axios.post(`https://indiflix.onrender.com/api/users/login`, { email, password });
       localStorage.setItem('token', response.data.token); // ✅ Save JWT token
       navigate('/'); // ✅ Redirect to Home
     } catch (error) {
@@ -32,7 +31,7 @@ const Login = () => {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const response = await axios.post(
-        `${API_URL}/auth/google-login`,
+        `https://indiflix.onrender.com/api/auth/google-login`,
         { token: credentialResponse.credential },
         { withCredentials: true }
       );
