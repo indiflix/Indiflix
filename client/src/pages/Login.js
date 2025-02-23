@@ -13,7 +13,7 @@ const Login = () => {
     // ✅ Redirect to home if user is already logged in
     const token = localStorage.getItem('token');
     if (token) {
-      navigate('/Home.js'); // Redirect to Home
+      navigate('/home'); // Redirect to Home
     }
   }, [navigate]);
 
@@ -22,7 +22,7 @@ const Login = () => {
     try {
       const response = await axios.post(`https://indiflix.onrender.com/api/users/login`, { email, password });
       localStorage.setItem('token', response.data.token); // ✅ Save JWT token
-      navigate('/Home.js'); // ✅ Redirect to Home
+      navigate('/home'); // ✅ Redirect to Home
     } catch (error) {
       console.error('Login failed:', error.response ? error.response.data : error.message);
     }
@@ -37,7 +37,7 @@ const Login = () => {
       );
 
       localStorage.setItem('token', response.data.token); // ✅ Save JWT token
-      navigate('/'); // ✅ Redirect to Home after login
+      navigate('/home'); // ✅ Redirect to Home after login
     } catch (error) {
       console.error('Google login failed:', error.response ? error.response.data : error.message);
     }
