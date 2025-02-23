@@ -17,7 +17,8 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
         <Route path="/movies" element={<PrivateRoute><Movies /></PrivateRoute>} />
         <Route path="/series" element={<PrivateRoute><Series /></PrivateRoute>} />
         <Route path="/anime" element={<PrivateRoute><Anime /></PrivateRoute>} />
