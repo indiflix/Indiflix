@@ -32,13 +32,13 @@ const Movies = () => {
       return;
     }
 
-    axios.get('http://localhost:5000/api/users/me', {
+    axios.get('https://indiflix.onrender.com/api/users/me', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => setIsAdmin(response.data.isAdmin))
       .catch(() => setIsAdmin(false));
 
-      axios.get('http://localhost:5000/api/media?type=movie')
+      axios.get('https://indiflix.onrender.com/api/media?type=movie')
       .then((response) => setMedia(response.data))
       .catch((error) => console.error('Error fetching movies:', error));
   }, [navigate]);
@@ -76,7 +76,7 @@ const Movies = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/media/upload', formData, {
+      const response = await axios.post('https://indiflix.onrender.com/api/media/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
       });
 
@@ -110,7 +110,7 @@ const Movies = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/media/delete/${id}`, {
+      await axios.delete(`https://indiflix.onrender.com/api/media/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -125,7 +125,7 @@ const Movies = () => {
   const handleAddToWatchlist = async (mediaId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/media/watchlist/add', { media_id: mediaId }, {
+      await axios.post('https://indiflix.onrender.com/api/media/watchlist/add', { media_id: mediaId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Added to watchlist!');
@@ -138,7 +138,7 @@ const Movies = () => {
   const handleRatingSubmit = async (mediaId, ratingValue) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/media/rate', { media_id: mediaId, rating: ratingValue }, {
+      await axios.post('https://indiflix.onrender.com/api/media/rate', { media_id: mediaId, rating: ratingValue }, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -17,14 +17,14 @@ const Home = () => {
     if (!token) {
       setIsAdmin(false);
     } else {
-      axios.get('http://localhost:5000/api/users/me', {
+      axios.get('https://indiflix.onrender.com/api/users/me', {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((response) => setIsAdmin(response.data.isAdmin))
         .catch(() => setIsAdmin(false));
     }
 
-    axios.get('http://localhost:5000/api/media')
+    axios.get('https://indiflix.onrender.com/api/media')
       .then((response) => {
         setMedia(response.data);
         setLoading(false);
@@ -40,7 +40,7 @@ const Home = () => {
   const handleRating = async (mediaId, rating) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/media/rate', { media_id: mediaId, rating }, {
+      await axios.post('https://indiflix.onrender.com/api/media/rate', { media_id: mediaId, rating }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Rating submitted successfully!');
@@ -53,7 +53,7 @@ const Home = () => {
   const handleWatchlist = async (mediaId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/media/watchlist/add', { media_id: mediaId }, {
+      await axios.post('https://indiflix.onrender.com/api/media/watchlist/add', { media_id: mediaId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Added to watchlist!');
@@ -68,7 +68,7 @@ const Home = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/media/delete/${id}`, {
+      await axios.delete(`https://indiflix.onrender.com/api/media/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

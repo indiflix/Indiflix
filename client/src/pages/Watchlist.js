@@ -8,7 +8,7 @@ const Watchlist = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    axios.get('http://localhost:5000/api/media/watchlist', {
+    axios.get('https://indiflix.onrender.com/api/media/watchlist', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => setWatchlist(response.data))
