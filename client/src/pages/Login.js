@@ -21,7 +21,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('${API_URL}/users/login', { email, password });
+      const response = await axios.post(`${API_URL}/users/login`, { email, password });
       localStorage.setItem('token', response.data.token); // ✅ Save JWT token
       navigate('/'); // ✅ Redirect to Home
     } catch (error) {
@@ -32,7 +32,7 @@ const Login = () => {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const response = await axios.post(
-        '${API_URL}/auth/google-login',
+        `${API_URL}/auth/google-login`,
         { token: credentialResponse.credential },
         { withCredentials: true }
       );

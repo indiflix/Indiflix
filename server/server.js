@@ -7,12 +7,12 @@ const db = require('./config/db');
 require('dotenv').config();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 
 app.use(
   cors({
-    origin: ["https://indiflix.vercel.app"], // ✅ Use frontend URL
+    origin: ["http://localhost:3000", "https://indiflix.vercel.app"], // ✅ Use frontend URL
     methods: "GET,POST,PUT,DELETE",
     credentials: true, // ✅ Allow authentication headers
   })
