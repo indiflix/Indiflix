@@ -10,7 +10,6 @@ import Contact from './pages/Contact';
 import Navbar from './components/Navbar';
 import Watchlist from './pages/Watchlist';
 import Search from './pages/Search';
-import HeroSpotlight from './components/HeroSpotlight';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 

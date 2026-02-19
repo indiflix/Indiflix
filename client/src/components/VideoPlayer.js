@@ -31,6 +31,29 @@ const VideoPlayer = ({ url, mediaItem = null, onNextEpisode, onPrevEpisode, onCl
   const [hideCursor, setHideCursor] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const playingRef = useRef(false);
+  const isScrubbingRef = useRef(false);
+
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
+
+  useEffect(() => {
+    isScrubbingRef.current = isScrubbing;
+  }, [isScrubbing]);
+
+  const scheduleHide = useCallback(() => {
+    setShowControls(true);
+    setHideCursor(false);
+    clearTimeout(hideTimer.current);
+    if (!playingRef.current) return;
+    hideTimer.current = setTimeout(() => {
+      if (!isScrubbingRef.current) {
+        setShowControls(false);
+        setHideCursor(true);
+      }
+    }, 2000);
+  }, []);
 
   // Start playing when URL changes
   useEffect(() => {
@@ -43,20 +66,7 @@ const VideoPlayer = ({ url, mediaItem = null, onNextEpisode, onPrevEpisode, onCl
       }
       scheduleHide();
     }
-  }, [url]);
-
-  const scheduleHide = useCallback(() => {
-    setShowControls(true);
-    setHideCursor(false);
-    clearTimeout(hideTimer.current);
-    if (!playing) return;
-    hideTimer.current = setTimeout(() => {
-      if (!isScrubbing) {
-        setShowControls(false);
-        setHideCursor(true);
-      }
-    }, 2000);
-  }, [playing, isScrubbing]);
+  }, [url, scheduleHide]);
 
   useEffect(() => {
     const handleActivity = () => scheduleHide();
@@ -80,9 +90,18 @@ const VideoPlayer = ({ url, mediaItem = null, onNextEpisode, onPrevEpisode, onCl
     []
   );
 
-  const seekRelative = (delta) => seekTo(Math.max(0, playedSeconds + delta));
+  const seekRelative = useCallback(
+    (delta) => {
+      setPlayedSeconds((prev) => {
+        const next = Math.max(0, prev + delta);
+        seekTo(next);
+        return next;
+      });
+    },
+    [seekTo]
+  );
 
-  const toggleFullscreen = () => {
+  const toggleFullscreen = useCallback(() => {
     const container = document.getElementById('video-player-shell');
     if (!container) return;
     if (document.fullscreenElement) {
@@ -90,7 +109,7 @@ const VideoPlayer = ({ url, mediaItem = null, onNextEpisode, onPrevEpisode, onCl
     } else {
       container.requestFullscreen();
     }
-  };
+  }, []);
 
   const updateContinueWatching = useCallback(
     (played, dur) => {
@@ -132,13 +151,13 @@ const VideoPlayer = ({ url, mediaItem = null, onNextEpisode, onPrevEpisode, onCl
     [mediaItem, url]
   );
 
-  const changeVolume = (delta) => {
+  const changeVolume = useCallback((delta) => {
     setVolume((v) => {
       const next = Math.min(1, Math.max(0, v + delta));
       if (next > 0) setMuted(false);
       return next;
     });
-  };
+  }, []);
 
   useEffect(() => {
     const onFullChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
@@ -205,7 +224,7 @@ const VideoPlayer = ({ url, mediaItem = null, onNextEpisode, onPrevEpisode, onCl
     };
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [duration, seekRelative, toggleFullscreen, togglePlayPause, scheduleHide, onNextEpisode, onPrevEpisode, changeVolume]);
+  }, [duration, seekRelative, toggleFullscreen, togglePlayPause, scheduleHide, onNextEpisode, onPrevEpisode, changeVolume, seekTo]);
 
   const progressPct = duration ? Math.min(100, (playedSeconds / duration) * 100) : 0;
 

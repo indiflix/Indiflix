@@ -65,16 +65,6 @@ const Series = () => {
       alert('No more episodes in this season!');
     }
   };
-  // ✅ Handle Rating Submission
-  const handleRating = async (mediaId, rating) => {
-    try {
-      await api.post('/media/rate', { media_id: mediaId, rating });
-      alert('Rating submitted successfully!');
-    } catch (error) {
-      alert('Error submitting rating: ' + error.response?.data?.error || error.message);
-    }
-  };
-
   // ✅ Handle Watchlist Addition
   const handleWatchlist = async (mediaId) => {
     try {

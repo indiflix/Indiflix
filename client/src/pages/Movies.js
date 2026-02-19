@@ -30,7 +30,6 @@ const Movies = () => {
   const [metaResults, setMetaResults] = useState([]);
   const [selectedMeta, setSelectedMeta] = useState(null);
   const [posterUrl, setPosterUrl] = useState('');
-  const [previewGenre, setPreviewGenre] = useState('');
   const [seriesOptions, setSeriesOptions] = useState([]);
   const [episodeVideoFile, setEpisodeVideoFile] = useState(null);
   const [episodeThumbFile, setEpisodeThumbFile] = useState(null);
@@ -148,7 +147,6 @@ const Movies = () => {
         setMetaResults([]);
         setSelectedMeta(null);
         setPosterUrl('');
-        setPreviewGenre('');
       } else {
         alert('Upload failed');
       }
