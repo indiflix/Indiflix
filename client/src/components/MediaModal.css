@@ -1,0 +1,127 @@
+.media-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+  padding: 16px;
+}
+
+.media-modal__card {
+  width: min(900px, 92vw);
+  max-height: 90vh;
+  overflow: hidden;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+}
+
+.media-modal__poster {
+  position: relative;
+  overflow: hidden;
+}
+
+.media-modal__poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-poster-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f1422, #1b2337);
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+}
+
+.media-modal__body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.media-modal__title {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.media-modal__meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+}
+
+.media-modal__description {
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.media-modal__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.episode-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.episode-list {
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+}
+
+.episode-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: background 160ms ease;
+}
+
+.episode-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 840px) {
+  .media-modal__card {
+    grid-template-columns: 1fr;
+    max-height: 92vh;
+  }
+  .media-modal__poster {
+    max-height: 260px;
+  }
+}

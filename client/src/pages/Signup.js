@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import './Signup.css';
 
@@ -10,7 +10,7 @@ const Signup = () => {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    axios.post('https://indiflix.onrender.com/api/users/register', { name, email, password })
+    api.post('/users/register', { name, email, password })
       .then((response) => console.log(response.data))
       .catch((error) => console.error(error));
   };

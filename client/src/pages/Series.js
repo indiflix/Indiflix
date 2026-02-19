@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import VideoPlayer from '../components/VideoPlayer';
+import MediaModal from '../components/MediaModal';
+import RowSection from '../components/RowSection';
+import HeroSpotlight from '../components/HeroSpotlight';
+import api from '../api';
 import './Series.css';
 
 const Series = () => {
@@ -9,6 +12,8 @@ const Series = () => {
   const [error, setError] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentEpisode, setCurrentEpisode] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [continueList, setContinueList] = useState([]);
  // const [currentMovie, setCurrentMovie] = useState(null);
  // const [videoUrl, setVideoUrl] = useState('');
 
@@ -18,14 +23,12 @@ const Series = () => {
     if (!token) {
       setIsAdmin(false);
     } else {
-      axios.get('https://indiflix.onrender.com/api/users/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      api.get('/users/me')
         .then((response) => setIsAdmin(response.data.isAdmin))
         .catch(() => setIsAdmin(false));
     }
 
-    axios.get('https://indiflix.onrender.com/api/media?type=Series')
+    api.get('/media', { params: { type: 'series' } })
       .then((response) => {
         setSeries(response.data);
         setLoading(false);
@@ -35,6 +38,19 @@ const Series = () => {
         setError('Failed to load series');
         setLoading(false);
       });
+
+    const loadCW = () => {
+      try {
+        const list = JSON.parse(localStorage.getItem('cw_entries')) || [];
+        setContinueList(list.filter((i) => i.type === 'series'));
+      } catch {
+        setContinueList([]);
+      }
+    };
+    loadCW();
+    const handler = () => loadCW();
+    window.addEventListener('cw-updated', handler);
+    return () => window.removeEventListener('cw-updated', handler);
   }, []);
   const handleNextEpisode = () => {
     if (!currentEpisode) return;
@@ -52,10 +68,7 @@ const Series = () => {
   // ✅ Handle Rating Submission
   const handleRating = async (mediaId, rating) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('https://indiflix.onrender.com/api/media/rate', { media_id: mediaId, rating }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post('/media/rate', { media_id: mediaId, rating });
       alert('Rating submitted successfully!');
     } catch (error) {
       alert('Error submitting rating: ' + error.response?.data?.error || error.message);
@@ -65,10 +78,7 @@ const Series = () => {
   // ✅ Handle Watchlist Addition
   const handleWatchlist = async (mediaId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('https://indiflix.onrender.com/api/media/watchlist/add', { media_id: mediaId }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post('/media/watchlist/add', { media_id: mediaId });
       alert('Added to watchlist!');
     } catch (error) {
       alert('Error adding to watchlist: ' + error.response?.data?.error || error.message);
@@ -80,10 +90,7 @@ const Series = () => {
     if (!window.confirm('Are you sure you want to delete this series?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`https://indiflix.onrender.com/api/media/delete/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/media/delete/${id}`);
 
       alert('Series deleted successfully!');
       setSeries(series.filter((item) => item.id !== id)); // ✅ Remove from UI
@@ -96,34 +103,59 @@ const Series = () => {
     <div className="series-container">
       <h1>Series</h1>
       {/* ✅ Video Player */}
-      {currentEpisode && <VideoPlayer url={currentEpisode.cloudinary_url} onNextEpisode={handleNextEpisode} />}
+      {currentEpisode && (
+        <VideoPlayer
+          url={currentEpisode.hls_url || currentEpisode.cloudinary_url}
+          mediaItem={currentEpisode}
+          onNextEpisode={handleNextEpisode}
+          onClose={() => setCurrentEpisode(null)}
+        />
+      )}
+      {selected && (
+        <MediaModal
+          item={selected}
+          onClose={() => setSelected(null)}
+          onPlay={(itm) => {
+            setCurrentEpisode(itm);
+            setSelected(null);
+          }}
+          onWatchlist={handleWatchlist}
+          onDelete={handleDelete}
+          isAdmin={isAdmin}
+        />
+      )}
 
       {loading && <p>Loading series...</p>}
       {error && <p className="error">{error}</p>}
 
       {!loading && series.length > 0 ? (
-        <div className="card-container">
-          {series.map((item) => (
-            <div key={item.id} className="card">
-              <img src={item.thumbnail_url} alt={item.title} />
-              <h3>{item.title} - S{item.season}E{item.episode}</h3>
-              <p>{item.description}</p>
-              <button onClick={() => setCurrentEpisode(item)}>▶ Play</button>
-              <button onClick={() => handleWatchlist(item.id)}>Add to Watchlist</button>
-
-              {/* ✅ Rating UI (5 Stars) */}
-              <div className="rating">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span key={star} onClick={() => handleRating(item.id, star)}>⭐</span>
-                ))}
-              </div>
-
-              {isAdmin && (
-                <button className="delete-button" onClick={() => handleDelete(item.id)}>Delete</button>
-              )}
-            </div>
-          ))}
-        </div>
+        <>
+          <HeroSpotlight
+            items={series}
+            onPlay={(itm) => setCurrentEpisode(itm)}
+            onMore={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Continue watching"
+            items={continueList.slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Trending series"
+            items={series.slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Drama & Romance"
+            items={series.filter((m) => (m.genre || '').toLowerCase().match(/drama|romance/)).slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Action & Adventure"
+            items={series.filter((m) => (m.genre || '').toLowerCase().includes('action')).slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+        </>
       ) : (
         !loading && <p>No series available.</p>
       )}

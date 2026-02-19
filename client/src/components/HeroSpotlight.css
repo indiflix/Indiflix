@@ -1,0 +1,139 @@
+.hero-spotlight {
+  position: relative;
+  width: 100%;
+  height: min(68vh, 640px);
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.72);
+  transform: scale(1.02);
+  animation: heroFade 650ms ease, heroSlide 650ms ease;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(5, 7, 15, 0.8) 0%, rgba(5, 7, 15, 0.35) 60%, rgba(5, 7, 15, 0.05) 100%);
+}
+
+.hero-content {
+  position: absolute;
+  left: clamp(18px, 4vw, 48px);
+  bottom: clamp(18px, 6vw, 64px);
+  max-width: min(640px, 60vw);
+  color: #fff;
+  animation: heroFade 650ms ease, heroSlideUp 650ms ease;
+}
+
+.hero-title {
+  margin: 0 0 12px;
+  font-size: clamp(30px, 5vw, 48px);
+  letter-spacing: -0.02em;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-desc {
+  margin: 0 0 16px;
+  color: #dfe6ff;
+  font-size: 1.02rem;
+  line-height: 1.45;
+  max-width: 620px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.hero-play {
+  background: #fff;
+  color: #0b0f1c;
+}
+
+.hero-more {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.hero-dots {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.hero-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease;
+}
+
+.hero-dots .dot.active {
+  background: #fff;
+  transform: scale(1.25);
+}
+
+@keyframes heroFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes heroSlide {
+  from {
+    transform: scale(1.06) translateX(12px);
+  }
+  to {
+    transform: scale(1.02) translateX(0);
+  }
+}
+
+@keyframes heroSlideUp {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-spotlight {
+    height: 56vh;
+    border-radius: 12px;
+  }
+  .hero-content {
+    max-width: 90vw;
+  }
+  .hero-desc {
+    display: none;
+  }
+}
+
+/* If the image is portrait and visually cropped, a future enhancement is to add a class 'hero-bg--contain'
+   and set background-size: contain; background-color: #05070f; */

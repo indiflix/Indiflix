@@ -9,6 +9,8 @@ import Signup from './pages/Signup';
 import Contact from './pages/Contact';
 import Navbar from './components/Navbar';
 import Watchlist from './pages/Watchlist';
+import Search from './pages/Search';
+import HeroSpotlight from './components/HeroSpotlight';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
@@ -25,7 +27,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/contact" element={<PrivateRoute><Contact /></PrivateRoute>} />
-        <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/watchlist" element={<PrivateRoute><Watchlist /></PrivateRoute>} />
+        <Route path="/search" element={<PrivateRoute><Search /></PrivateRoute>} />
       </Routes>
     </Router>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import './Login.css';
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`https://indiflix.onrender.com/api/users/login`, { email, password });
+      const response = await api.post(`/users/login`, { email, password });
       localStorage.setItem('token', response.data.token); // ✅ Save JWT token
       navigate('/home'); // ✅ Redirect to Home
     } catch (error) {
@@ -30,8 +30,8 @@ const Login = () => {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
-      const response = await axios.post(
-        `https://indiflix.onrender.com/api/auth/google-login`,
+      const response = await api.post(
+        `/auth/google-login`,
         { token: credentialResponse.credential },
         { withCredentials: true }
       );

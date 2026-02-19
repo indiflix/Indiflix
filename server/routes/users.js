@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../config/db');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const router = express.Router();
@@ -30,17 +31,23 @@ router.get('/me', authenticateUser, (req, res) => {
   });
 });
 
-// ✅ Register User (Modify if needed)
+// ✅ Register User (now hashes password)
 router.post('/register', (req, res) => {
   const { name, email, password } = req.body;
+  if (!email || !password || !name) return res.status(400).json({ error: 'Missing fields' });
+
+  const hashed = bcrypt.hashSync(password, 10);
   const sql = 'INSERT INTO users (name, email, password, isAdmin) VALUES (?, ?, ?, 0)'; // Default isAdmin = 0
-  db.query(sql, [name, email, password], (err, result) => {
-    if (err) throw err;
+  db.query(sql, [name, email, hashed], (err) => {
+    if (err) {
+      if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'User already exists' });
+      return res.status(500).json({ error: 'Database error' });
+    }
     res.json({ message: 'User registered successfully' });
   });
 });
 
-// ✅ Login User (Modify if needed)
+// ✅ Login User (password check with bcrypt)
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
   db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
@@ -49,9 +56,8 @@ router.post('/login', (req, res) => {
 
     const user = results[0];
 
-    if (user.password !== password) {
-      return res.status(401).json({ error: 'Incorrect password' });
-    }
+    const passwordMatch = user.password ? bcrypt.compareSync(password, user.password) : false;
+    if (!passwordMatch) return res.status(401).json({ error: 'Incorrect password' });
 
     // ✅ Generate JWT Token
     const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });

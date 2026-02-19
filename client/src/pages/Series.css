@@ -1,17 +1,16 @@
 .series-container {
   padding: 20px;
-  text-align: center;
+  text-align: left;
 }
 
 .card-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 240px));
+  gap: 18px;
+  justify-content: flex-start;
 }
 
 .card {
-  width: 300px;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
@@ -26,13 +25,13 @@
 
 .card img {
   width: 100%;
-  height: 400px;
+  height: 320px;
   object-fit: cover;
 }
 
 .card h3 {
   margin: 10px 0;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #333;
 }
 

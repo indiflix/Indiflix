@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import VideoPlayer from '../components/VideoPlayer';
-import axios from 'axios';
+import MediaModal from '../components/MediaModal';
+import RowSection from '../components/RowSection';
+import HeroSpotlight from '../components/HeroSpotlight';
+import api from '../api';
 import './Anime.css';
 
 const Anime = () => {
@@ -8,6 +11,8 @@ const Anime = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentEpisode, setCurrentEpisode] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [continueList, setContinueList] = useState([]);
   //const [currentMovie, setCurrentMovie] = useState(null);
   //const [videoUrl, setVideoUrl] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -18,14 +23,12 @@ const Anime = () => {
     if (!token) {
       setIsAdmin(false);
     } else {
-      axios.get('https://indiflix.onrender.com/api/users/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      api.get('/users/me')
         .then((response) => setIsAdmin(response.data.isAdmin))
         .catch(() => setIsAdmin(false));
     }
 
-    axios.get('https://indiflix.onrender.com/api/media?type=anime')
+    api.get('/media', { params: { type: 'anime' } })
       .then((response) => {
         setAnime(response.data);
         setLoading(false);
@@ -35,6 +38,19 @@ const Anime = () => {
         setError('Failed to load anime');
         setLoading(false);
       });
+
+    const loadCW = () => {
+      try {
+        const list = JSON.parse(localStorage.getItem('cw_entries')) || [];
+        setContinueList(list.filter((i) => i.type === 'anime'));
+      } catch {
+        setContinueList([]);
+      }
+    };
+    loadCW();
+    const handler = () => loadCW();
+    window.addEventListener('cw-updated', handler);
+    return () => window.removeEventListener('cw-updated', handler);
   }, []);
   const handleNextEpisode = () => {
     if (!currentEpisode) return;
@@ -53,10 +69,7 @@ const Anime = () => {
   // ✅ Handle Rating Submission
   const handleRating = async (mediaId, rating) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('https://indiflix.onrender.com/api/media/rate', { media_id: mediaId, rating }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post('/media/rate', { media_id: mediaId, rating });
       alert('Rating submitted successfully!');
     } catch (error) {
       alert('Error submitting rating: ' + error.response?.data?.error || error.message);
@@ -66,10 +79,7 @@ const Anime = () => {
   // ✅ Handle Watchlist Addition
   const handleWatchlist = async (mediaId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('https://indiflix.onrender.com/api/media/watchlist/add', { media_id: mediaId }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.post('/media/watchlist/add', { media_id: mediaId });
       alert('Added to watchlist!');
     } catch (error) {
       alert('Error adding to watchlist: ' + error.response?.data?.error || error.message);
@@ -81,10 +91,7 @@ const Anime = () => {
     if (!window.confirm('Are you sure you want to delete this anime?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`https://indiflix.onrender.com/api/media/delete/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.delete(`/media/delete/${id}`);
 
       alert('Anime deleted successfully!');
       setAnime(anime.filter((item) => item.id !== id)); // ✅ Remove from UI
@@ -96,34 +103,59 @@ const Anime = () => {
   return (
     <div className="anime-container">
       <h1>Anime</h1>
-      {currentEpisode && <VideoPlayer url={currentEpisode.cloudinary_url} onNextEpisode={handleNextEpisode} />}
+      {currentEpisode && (
+        <VideoPlayer
+          url={currentEpisode.hls_url || currentEpisode.cloudinary_url}
+          mediaItem={currentEpisode}
+          onNextEpisode={handleNextEpisode}
+          onClose={() => setCurrentEpisode(null)}
+        />
+      )}
+      {selected && (
+        <MediaModal
+          item={selected}
+          onClose={() => setSelected(null)}
+          onPlay={(itm) => {
+            setCurrentEpisode(itm);
+            setSelected(null);
+          }}
+          onWatchlist={handleWatchlist}
+          onDelete={handleDelete}
+          isAdmin={isAdmin}
+        />
+      )}
 
       {loading && <p>Loading anime...</p>}
       {error && <p className="error">{error}</p>}
 
       {!loading && anime.length > 0 ? (
-        <div className="card-container">
-          {anime.map((item) => (
-            <div key={item.id} className="card">
-              <img src={item.thumbnail_url} alt={item.title} />
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-              <button onClick={() => setCurrentEpisode(item)}>▶ Play</button>
-              <button onClick={() => handleWatchlist(item.id)}>Add to Watchlist</button>
-
-              {/* ✅ Rating UI (5 Stars) */}
-              <div className="rating">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span key={star} onClick={() => handleRating(item.id, star)}>⭐</span>
-                ))}
-              </div>
-
-              {isAdmin && (
-                <button className="delete-button" onClick={() => handleDelete(item.id)}>Delete</button>
-              )}
-            </div>
-          ))}
-        </div>
+        <>
+          <HeroSpotlight
+            items={anime}
+            onPlay={(itm) => setCurrentEpisode(itm)}
+            onMore={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Continue watching"
+            items={continueList.slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Trending anime"
+            items={anime.slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Action & Adventure"
+            items={anime.filter((m) => (m.genre || '').toLowerCase().includes('action')).slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+          <RowSection
+            title="Drama & Fantasy"
+            items={anime.filter((m) => (m.genre || '').toLowerCase().match(/drama|fantasy/)).slice(0, 12)}
+            onCardClick={(itm) => setSelected(itm)}
+          />
+        </>
       ) : (
         !loading && <p>No anime available.</p>
       )}

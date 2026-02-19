@@ -1,0 +1,39 @@
+.row-section {
+  margin: 20px 0 28px;
+}
+
+.row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.row-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.row-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.row-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+.row-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+.row-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+}
+
+.row-card {
+  min-width: 220px;
+  max-width: 220px;
+}

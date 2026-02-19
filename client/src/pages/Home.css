@@ -1,40 +1,38 @@
 .home-container {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .card-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  
-  .card {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card img {
-    width: 100%;
-    height: 400px;
-    object-fit: cover;
-  }
-  
-  .card h3 {
-    margin: 10px 0;
-    font-size: 1.5rem;
-  }
-  
-  .card p {
-    padding: 0 10px 10px;
-    color: #666;
-  }
+  padding: 32px clamp(16px, 3vw, 48px);
+  text-align: left;
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 240px));
+  gap: 18px;
+  justify-content: flex-start;
+}
+
+.card p {
+  margin-top: 0;
+}
+
+.card {
+  min-height: 360px;
+}
+
+.rating span {
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-right: 4px;
+}
+
+.card button {
+  margin-right: 8px;
+  margin-top: 6px;
+}

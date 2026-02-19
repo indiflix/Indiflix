@@ -1,27 +1,85 @@
-.contact-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
-  }
-  
-  .contact-box {
-    width: 400px;
-    padding: 40px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .contact-box h1 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 2rem;
-  }
-  
-  .contact-box p {
-    color: #666;
-    margin: 10px 0;
-  }
+.contact-wrapper {
+  min-height: calc(100vh - 80px);
+  padding: 48px clamp(16px, 3vw, 64px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  align-items: center;
+}
+
+.contact-hero {
+  color: var(--text);
+}
+
+.contact-hero h1 {
+  font-size: clamp(32px, 4vw, 46px);
+  margin: 0 0 12px;
+}
+
+.contact-hero p {
+  color: var(--muted);
+  margin: 6px 0;
+}
+
+.contact-card {
+  position: relative;
+  padding: 26px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.contact-card::after {
+  content: '';
+  position: absolute;
+  inset: -30% 50% auto -20%;
+  background: radial-gradient(circle, rgba(90, 209, 255, 0.25), transparent 40%);
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.contact-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.contact-row .icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #0b0f1c;
+  font-weight: 700;
+}
+
+.contact-row .label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.contact-row .value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
